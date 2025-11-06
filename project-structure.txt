@@ -1,0 +1,106 @@
+RestMan Project Structure
+=========================
+
+ROOT/
+├── sql/
+│   ├── schema.sql              ✓ Database schema
+│   └── sample_data.sql          ✓ Sample data
+│
+├── src/
+│   └── main/
+│       ├── java/
+│       │   ├── dao/             ✓ Data Access Objects
+│       │   │   ├── AccountDAO.java
+│       │   │   ├── DishCatalogDAO.java
+│       │   │   ├── InvoiceDAO.java
+│       │   │   ├── MenuDAO.java
+│       │   │   ├── OrderDAO.java
+│       │   │   └── ReportingDAO.java
+│       │   │
+│       │   ├── model/           ✓ Domain Models
+│       │   │   ├── enums/
+│       │   │   │   ├── DishStatus.java
+│       │   │   │   ├── Gender.java
+│       │   │   │   ├── InvoiceStatus.java
+│       │   │   │   ├── MembershipTier.java
+│       │   │   │   ├── MenuStatus.java
+│       │   │   │   ├── MenuType.java
+│       │   │   │   ├── OrderChannel.java
+│       │   │   │   ├── OrderStatus.java
+│       │   │   │   ├── PaymentMethod.java
+│       │   │   │   └── Role.java
+│       │   │   │
+│       │   │   ├── vm/          View Models
+│       │   │   │   ├── CustomerRevenueRow.java
+│       │   │   │   ├── DishCardVM.java
+│       │   │   │   ├── DishDetailVM.java
+│       │   │   │   └── OrderDetailVM.java
+│       │   │   │
+│       │   │   ├── Account.java
+│       │   │   ├── Customer.java
+│       │   │   ├── Dish.java
+│       │   │   ├── Invoice.java
+│       │   │   ├── MembershipCard.java
+│       │   │   ├── Menu.java
+│       │   │   ├── MenuItem.java
+│       │   │   ├── Order.java
+│       │   │   └── OrderItem.java
+│       │   │
+│       │   ├── servlet/         ✓ Controllers
+│       │   │   ├── CatalogController.java
+│       │   │   └── CustomerRevenueReportController.java
+│       │   │
+│       │   └── util/            ✓ Utilities
+│       │       └── DBUtil.java
+│       │
+│       └── webapp/
+│           ├── css/             ✓ Stylesheets
+│           │   ├── customer.css
+│           │   └── staff.css
+│           │
+│           ├── WEB-INF/
+│           │   ├── jsp/
+│           │   │   ├── customer/    ✓ Customer Pages
+│           │   │   │   ├── gdChinhKH.jsp
+│           │   │   │   ├── gdChonMenu.jsp
+│           │   │   │   ├── gdTimMon.jsp
+│           │   │   │   ├── gdKetQuaMon.jsp
+│           │   │   │   └── gdChiTietMon.jsp
+│           │   │   │
+│           │   │   └── staff/       ✓ Staff Pages
+│           │   │       ├── gdChinhNV.jsp
+│           │   │       ├── gdMenuBaoCao.jsp
+│           │   │       ├── gdLocDT.jsp
+│           │   │       ├── gdKetQuaDT.jsp
+│           │   │       ├── gdDonHangKH.jsp
+│           │   │       ├── gdChiTietDon.jsp
+│           │   │       └── gdChiTietHD.jsp
+│           │   │
+│           │   └── web.xml          ✓ Web config
+│           │
+│           └── index.jsp            ✓ Landing page
+│
+├── .env                             ✓ Environment config
+├── .env.example                     ✓ Environment template
+├── .gitignore                       ✓ Git ignore
+├── build.bat                        ✓ Build script
+├── pom.xml                          ✓ Maven config
+├── README.md                        ✓ Documentation
+└── SETUP.md                         ✓ Setup guide
+
+Features:
+=========
+
+Module 1: Customer Dish Search
+- Browse menus
+- Search dishes by keyword
+- View dish details
+- Pagination & sorting
+
+Module 2: Staff Revenue Report
+- Filter by date range
+- Filter by membership tier
+- Filter by minimum revenue
+- View customer orders
+- View order details
+- View invoices
