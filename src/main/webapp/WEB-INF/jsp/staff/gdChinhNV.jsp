@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+﻿<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
@@ -18,7 +18,7 @@
         <nav class="main-nav">
             <h2>Chức năng của Nhân Viên</h2>
             <div class="nav-grid">
-                <a href="${pageContext.request.contextPath}/WEB-INF/jsp/staff/gdMenuBaoCao.jsp" class="nav-card">
+                <a href="${pageContext.request.contextPath}/staff/reports" class="nav-card">
                     <h3>📊 Báo Cáo</h3>
                     <p>Xem các báo cáo thống kê</p>
                 </a>

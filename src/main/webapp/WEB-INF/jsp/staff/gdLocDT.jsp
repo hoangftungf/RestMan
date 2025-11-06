@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+﻿<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
@@ -13,9 +13,9 @@
         <header>
             <h1>📊 Thống Kê Khách Hàng Theo Doanh Thu</h1>
             <nav class="breadcrumb">
-                <a href="${pageContext.request.contextPath}/WEB-INF/jsp/staff/gdChinhNV.jsp">Trang chủ</a>
+                <a href="${pageContext.request.contextPath}/staff">Trang chủ</a>
                 <span>›</span>
-                <a href="${pageContext.request.contextPath}/WEB-INF/jsp/staff/gdMenuBaoCao.jsp">Báo cáo</a>
+                <a href="${pageContext.request.contextPath}/staff/reports">Báo cáo</a>
                 <span>›</span>
                 <span>Khách hàng theo doanh thu</span>
             </nav>
@@ -97,7 +97,7 @@
         </main>
 
         <footer>
-            <a href="${pageContext.request.contextPath}/WEB-INF/jsp/staff/gdMenuBaoCao.jsp" class="btn btn-secondary">← Quay lại</a>
+            <a href="${pageContext.request.contextPath}/staff/reports" class="btn btn-secondary">← Quay lại</a>
             <p>&copy; 2025 RestMan. All rights reserved.</p>
         </footer>
     </div>

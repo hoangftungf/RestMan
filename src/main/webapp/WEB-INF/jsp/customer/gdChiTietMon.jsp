@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+﻿<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
@@ -6,16 +6,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chi Tiết Món - ${dish.name}</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css">
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/customer.css">
 </head>
 <body>
+    <!-- System Header -->
+    <jsp:include page="/WEB-INF/jsp/common/systemHeader.jsp" />
+
     <div class="container">
-        <header>
+        <header class="page-header">
             <h1>📋 Chi Tiết Món Ăn</h1>
             <nav class="breadcrumb">
-                <a href="${pageContext.request.contextPath}/WEB-INF/jsp/customer/gdChinhKH.jsp">Trang chủ</a>
+                <a href="${pageContext.request.contextPath}/customer">Trang chủ</a>
                 <span>›</span>
-                <a href="${pageContext.request.contextPath}/catalog">Chọn Menu</a>
+                <a href="${pageContext.request.contextPath}/catalog">Tìm kiếm món ăn</a>
                 <span>›</span>
                 <span>Chi tiết món</span>
             </nav>

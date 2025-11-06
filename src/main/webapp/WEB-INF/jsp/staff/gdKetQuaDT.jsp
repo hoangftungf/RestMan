@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+﻿<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
@@ -14,9 +14,9 @@
         <header>
             <h1>📊 Báo Cáo Doanh Thu Khách Hàng (${totalCustomers} khách hàng)</h1>
             <nav class="breadcrumb">
-                <a href="${pageContext.request.contextPath}/WEB-INF/jsp/staff/gdChinhNV.jsp">Trang chủ</a>
+                <a href="${pageContext.request.contextPath}/staff">Trang chủ</a>
                 <span>›</span>
-                <a href="${pageContext.request.contextPath}/WEB-INF/jsp/staff/gdMenuBaoCao.jsp">Báo cáo</a>
+                <a href="${pageContext.request.contextPath}/staff/reports">Báo cáo</a>
                 <span>›</span>
                 <span>Kết quả</span>
             </nav>
@@ -123,7 +123,7 @@
 
         <footer>
             <a href="${pageContext.request.contextPath}/report/customer-revenue" class="btn btn-secondary">← Đổi bộ lọc</a>
-            <a href="${pageContext.request.contextPath}/WEB-INF/jsp/staff/gdMenuBaoCao.jsp" class="btn btn-secondary">Menu báo cáo</a>
+            <a href="${pageContext.request.contextPath}/staff/reports" class="btn btn-secondary">Menu báo cáo</a>
             <p>&copy; 2025 RestMan. All rights reserved.</p>
         </footer>
     </div>

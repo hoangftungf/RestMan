@@ -1,4 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+﻿<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
@@ -14,9 +14,9 @@
         <header>
             <h1>📋 Chi Tiết Đơn Hàng</h1>
             <nav class="breadcrumb">
-                <a href="${pageContext.request.contextPath}/WEB-INF/jsp/staff/gdChinhNV.jsp">Trang chủ</a>
+                <a href="${pageContext.request.contextPath}/staff">Trang chủ</a>
                 <span>›</span>
-                <a href="${pageContext.request.contextPath}/WEB-INF/jsp/staff/gdMenuBaoCao.jsp">Báo cáo</a>
+                <a href="${pageContext.request.contextPath}/staff/reports">Báo cáo</a>
                 <span>›</span>
                 <span>Chi tiết đơn</span>
             </nav>

@@ -1,6 +1,21 @@
 # RestMan - Hệ Thống Quản Lý Nhà Hàng
 
-RestMan là một ứng dụng web quản lý nhà hàng được phát triển bằng Java Servlet/JSP với MySQL database.
+RestMan là một ứng dụng web quản lý nhà hàng được phát triển bằng Java Servlet/JSP với MySQL database, tương thích với **Tomcat 10.1+ (Jakarta EE 9+)**.
+
+## 🚀 Quick Start với Docker
+
+```bash
+# Build project
+mvn clean package
+
+# Start with Docker Compose (MySQL + RestMan)
+docker-compose up -d
+
+# Truy cập
+open http://localhost:8080/
+```
+
+👉 **Xem chi tiết:** [DOCKER_QUICK_START.md](DOCKER_QUICK_START.md)
 
 ## Tính năng
 

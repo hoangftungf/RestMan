@@ -48,6 +48,27 @@ public class AccountDAO {
     }
 
     /**
+     * Authenticate user with username and password
+     * For now, we use plain text password comparison
+     * TODO: Implement BCrypt password hashing in production
+     */
+    public Account authenticate(String username, String password) throws SQLException {
+        Account account = findByUsername(username);
+
+        if (account == null) {
+            return null;
+        }
+
+        // Compare passwords (plain text for now)
+        // In production, use BCrypt.checkpw(password, account.getPassword())
+        if (account.getPassword().equals(password)) {
+            return account;
+        }
+
+        return null;
+    }
+
+    /**
      * Map ResultSet to Account object
      */
     private Account mapResultSetToAccount(ResultSet rs) throws SQLException {
