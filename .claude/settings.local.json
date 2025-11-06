@@ -7,7 +7,8 @@
       "Bash(powershell -ExecutionPolicy Bypass -File migrate-to-jakarta.ps1)",
       "Bash(powershell -Command \"$env:JAVA_HOME=''C:\\Program Files\\Java\\jdk-17''; mvn clean compile\")",
       "Bash(powershell -ExecutionPolicy Bypass -File build.ps1)",
-      "Bash(mvn clean package:*)"
+      "Bash(mvn clean package:*)",
+      "Bash(del SETUP.md CHECKLIST.md FIX_LINKS.md ROUTING_GUIDE.md FIXED_ROUTING_ISSUE.md TOMCAT_10_DEPLOYMENT.md DOCKER_QUICK_START.md MIGRATION_SUMMARY.md CHANGELOG.md)"
     ],
     "deny": [],
     "ask": []
