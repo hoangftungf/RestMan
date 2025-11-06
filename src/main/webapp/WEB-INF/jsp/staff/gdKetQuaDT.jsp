@@ -7,19 +7,340 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Báo Cáo Doanh Thu Khách Hàng - RestMan</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/staff.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #5b9bd5 0%, #4a7fb8 100%);
+            color: white;
+            padding: 30px;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .breadcrumb {
+            margin-top: 15px;
+            font-size: 0.9em;
+        }
+
+        .breadcrumb a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        .breadcrumb span {
+            margin: 0 8px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .btn-logout {
+            display: inline-block;
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            border: 2px solid white;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-logout:hover {
+            background: white;
+            color: #4a7fb8;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .report-summary {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+
+        .report-summary h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .summary-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #5b9bd5;
+        }
+
+        .summary-item .label {
+            display: block;
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .summary-item .value {
+            display: block;
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .summary-item .value.highlight {
+            color: #28a745;
+            font-size: 1.5em;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            margin-bottom: 20px;
+        }
+
+        .data-table thead {
+            background: linear-gradient(135deg, #5b9bd5 0%, #4a7fb8 100%);
+            color: white;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 15px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .data-table th {
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85em;
+            letter-spacing: 0.5px;
+        }
+
+        .data-table tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .data-table .amount {
+            text-align: right;
+            font-weight: 600;
+            color: #28a745;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-VIP {
+            background: #ffd700;
+            color: #333;
+        }
+
+        .badge-GOLD {
+            background: #ffb347;
+            color: #333;
+        }
+
+        .badge-SILVER {
+            background: #c0c0c0;
+            color: #333;
+        }
+
+        .badge-BRONZE {
+            background: #cd7f32;
+            color: white;
+        }
+
+        .badge-none {
+            background: #e0e0e0;
+            color: #666;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #5b9bd5 0%, #4a7fb8 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(91, 155, 213, 0.4);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 0.85em;
+            background: #5b9bd5;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .btn-small:hover {
+            background: #4a7fb8;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .page-link {
+            padding: 10px 15px;
+            background: white;
+            border: 1px solid #5b9bd5;
+            border-radius: 5px;
+            text-decoration: none;
+            color: #4a7fb8;
+        }
+
+        .page-link.active {
+            background: #5b9bd5;
+            color: white;
+        }
+
+        .page-link:hover:not(.active) {
+            background: #f0f0f0;
+        }
+
+        .alert {
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+        }
+
+        footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        footer p {
+            color: #666;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .data-table {
+                font-size: 0.85em;
+            }
+
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <h1>📊 Báo Cáo Doanh Thu Khách Hàng (${totalCustomers} khách hàng)</h1>
-            <nav class="breadcrumb">
-                <a href="${pageContext.request.contextPath}/staff">Trang chủ</a>
-                <span>›</span>
-                <a href="${pageContext.request.contextPath}/staff/reports">Báo cáo</a>
-                <span>›</span>
-                <span>Kết quả</span>
-            </nav>
+            <div class="header-content">
+                <div>
+                    <h1>📊 Báo Cáo Doanh Thu Khách Hàng (${totalCustomers} khách hàng)</h1>
+                    <nav class="breadcrumb">
+                        <a href="${pageContext.request.contextPath}/staff">Trang chủ</a>
+                        <span>›</span>
+                        <a href="${pageContext.request.contextPath}/staff/reports">Báo cáo</a>
+                        <span>›</span>
+                        <span>Kết quả</span>
+                    </nav>
+                </div>
+                <div class="header-actions">
+                    <a href="${pageContext.request.contextPath}/logout" class="btn-logout">🚪 Đăng Xuất</a>
+                </div>
+            </div>
         </header>
 
         <main class="content">
