@@ -1,0 +1,109 @@
+/* Common CSS for entire RestMan system */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f5f5f5;
+    min-height: 100vh;
+}
+
+/* Common Header - Blue background with logo */
+.system-header {
+    background: #0066cc;
+    padding: 30px 20px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.system-header .logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.system-header .logo-icon {
+    font-size: 3em;
+}
+
+.system-header .logo h1 {
+    color: white;
+    font-size: 3em;
+    font-weight: 700;
+    margin: 0;
+}
+
+.system-header .tagline {
+    color: rgba(255, 255, 255, 0.95);
+    font-size: 1.1em;
+    margin: 0;
+}
+
+/* Page specific header (blue bar for customer pages) */
+.page-header {
+    background: #0066cc;
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.page-header h1 {
+    font-size: 2em;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.breadcrumb {
+    margin-top: 10px;
+    font-size: 0.9em;
+}
+
+.breadcrumb a {
+    color: white;
+    text-decoration: none;
+}
+
+.breadcrumb a:hover {
+    text-decoration: underline;
+}
+
+.breadcrumb span {
+    margin: 0 8px;
+}
+
+/* Container */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: white;
+}
+
+.content {
+    padding: 30px 40px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .system-header .logo {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .system-header .logo h1 {
+        font-size: 2em;
+    }
+
+    .system-header .tagline {
+        font-size: 0.95em;
+    }
+
+    .page-header h1 {
+        font-size: 1.5em;
+    }
+}
