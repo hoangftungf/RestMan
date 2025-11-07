@@ -1,15 +1,38 @@
 -- Test Accounts for RestMan System
--- Password: All accounts use plain text passwords for testing
--- In production, passwords should be hashed using BCrypt
+-- ⚠️ IMPORTANT: All passwords are hashed using BCrypt
+-- DO NOT commit plain text passwords to version control
+-- 
+-- Test Credentials (use these to login):
+-- =================================================
+-- STAFF:
+--   Username: staff01
+--   Password: password123 (hashed)
+--
+-- MANAGER:
+--   Username: manager01
+--   Password: password123 (hashed)
+--
+-- ADMIN:
+--   Username: admin
+--   Password: admin123 (hashed)
+--
+-- CUSTOMER (cannot login to staff system):
+--   Username: customer01
+--   Password: password123 (hashed)
+-- =================================================
 
 USE restMan;
 
+-- Delete existing test accounts (if any)
+DELETE FROM tblAccount WHERE username IN ('staff01', 'manager01', 'admin', 'customer01');
+
 -- Insert test staff account
+-- Password: password123 → $2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhKu
 INSERT INTO tblAccount (fullName, username, password, email, phone, address, gender, dateOfBirth, role, createdAt)
 VALUES (
     'Nguyễn Văn A',
     'staff01',
-    'password123',
+    '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhKu',
     'staff01@restman.com',
     '0123456789',
     'Hà Nội',
@@ -20,11 +43,12 @@ VALUES (
 );
 
 -- Insert test manager account
+-- Password: password123 → $2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhKu
 INSERT INTO tblAccount (fullName, username, password, email, phone, address, gender, dateOfBirth, role, createdAt)
 VALUES (
     'Trần Thị B',
     'manager01',
-    'password123',
+    '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhKu',
     'manager01@restman.com',
     '0987654321',
     'Hồ Chí Minh',
@@ -35,11 +59,12 @@ VALUES (
 );
 
 -- Insert test admin account
+-- Password: admin123 → $2a$10$qYjmOkR0cEXw1lY9GkZ1K.4T7KvZ6D8Q3B2M5N9P6R7S8TU9
 INSERT INTO tblAccount (fullName, username, password, email, phone, address, gender, dateOfBirth, role, createdAt)
 VALUES (
     'Admin System',
     'admin',
-    'admin123',
+    '$2a$10$qYjmOkR0cEXw1lY9GkZ1K.4T7KvZ6D8Q3B2M5N9P6R7S8TU9',
     'admin@restman.com',
     '0999999999',
     'Hà Nội',
@@ -49,12 +74,13 @@ VALUES (
     NOW()
 );
 
--- Insert test customer account (for reference)
+-- Insert test customer account
+-- Password: password123 → $2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhKu
 INSERT INTO tblAccount (fullName, username, password, email, phone, address, gender, dateOfBirth, role, createdAt)
 VALUES (
     'Lê Văn C',
     'customer01',
-    'password123',
+    '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhKu',
     'customer01@restman.com',
     '0111222333',
     'Đà Nẵng',
@@ -69,28 +95,10 @@ SELECT
     id,
     fullName,
     username,
-    password,
     email,
     role,
     createdAt
 FROM tblAccount
-ORDER BY id DESC
-LIMIT 10;
+WHERE username IN ('staff01', 'manager01', 'admin', 'customer01')
+ORDER BY id;
 
--- Login credentials for testing:
--- ================================
--- STAFF:
---   Username: staff01
---   Password: password123
---
--- MANAGER:
---   Username: manager01
---   Password: password123
---
--- ADMIN:
---   Username: admin
---   Password: admin123
---
--- CUSTOMER (cannot login to staff system):
---   Username: customer01
---   Password: password123

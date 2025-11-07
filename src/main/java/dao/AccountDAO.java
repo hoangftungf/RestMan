@@ -4,6 +4,7 @@ import model.Account;
 import model.enums.Gender;
 import model.enums.Role;
 import util.DBUtil;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.sql.*;
 
@@ -16,7 +17,7 @@ public class AccountDAO {
         String sql = "SELECT * FROM tblAccount WHERE id = ?";
 
         try (Connection conn = DBUtil.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, accountId);
             try (ResultSet rs = ps.executeQuery()) {
@@ -35,7 +36,7 @@ public class AccountDAO {
         String sql = "SELECT * FROM tblAccount WHERE username = ?";
 
         try (Connection conn = DBUtil.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
+                PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, username);
             try (ResultSet rs = ps.executeQuery()) {
@@ -48,9 +49,7 @@ public class AccountDAO {
     }
 
     /**
-     * Authenticate user with username and password
-     * For now, we use plain text password comparison
-     * TODO: Implement BCrypt password hashing in production
+     * Authenticate user with username and password using BCrypt
      */
     public Account authenticate(String username, String password) throws SQLException {
         Account account = findByUsername(username);
@@ -59,13 +58,40 @@ public class AccountDAO {
             return null;
         }
 
-        // Compare passwords (plain text for now)
-        // In production, use BCrypt.checkpw(password, account.getPassword())
-        if (account.getPassword().equals(password)) {
+        // Compare passwords using BCrypt
+        if (BCrypt.checkpw(password, account.getPassword())) {
             return account;
         }
 
         return null;
+    }
+
+    public static String hashPassword(String plainPassword) {
+        return BCrypt.hashpw(plainPassword, BCrypt.gensalt());
+    }
+
+    /**
+     * Create new account in database
+     */
+    public boolean create(Account account) throws SQLException {
+        String sql = "INSERT INTO tblAccount (fullName, username, password, email, phone, address, gender, dateOfBirth, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try (Connection conn = DBUtil.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, account.getFullName());
+            ps.setString(2, account.getUsername());
+            ps.setString(3, account.getPassword());
+            ps.setString(4, account.getEmail());
+            ps.setString(5, account.getPhone());
+            ps.setString(6, account.getAddress());
+            ps.setString(7, account.getGender() != null ? account.getGender().name() : null);
+            ps.setDate(8, account.getDateOfBirth());
+            ps.setString(9, account.getRole() != null ? account.getRole().name() : "CUSTOMER");
+
+            int rowsAffected = ps.executeUpdate();
+            return rowsAffected > 0;
+        }
     }
 
     /**

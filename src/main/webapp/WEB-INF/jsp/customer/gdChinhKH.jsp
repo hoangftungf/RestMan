@@ -104,6 +104,36 @@
             font-size: 0.9em;
         }
 
+        .header-actions {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            margin-bottom: 30px;
+            gap: 15px;
+        }
+
+        .home-link {
+            padding: 12px 28px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+            background: #7f8c8d;
+            color: white;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .home-link:hover {
+            background: #6c7a7b;
+            transform: translateX(-3px);
+            box-shadow: 0 5px 15px rgba(127, 140, 141, 0.3);
+        }
+
         @media (max-width: 768px) {
             .main-content {
                 padding: 40px 30px;
@@ -117,6 +147,16 @@
                 grid-template-columns: 1fr;
                 gap: 20px;
             }
+
+            .header-actions {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .home-link, .logout-btn {
+                width: 100%;
+                text-align: center;
+            }
         }
     </style>
 </head>
@@ -125,6 +165,10 @@
     <jsp:include page="/WEB-INF/jsp/common/systemHeader.jsp" />
 
     <div class="main-content">
+        <div class="header-actions">
+            <a href="${pageContext.request.contextPath}/" class="home-link">← Quay lại</a>
+        </div>
+
         <h2>Chức năng của Khách Hàng</h2>
 
         <div class="functions">

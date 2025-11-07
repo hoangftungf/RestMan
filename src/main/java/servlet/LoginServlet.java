@@ -9,6 +9,11 @@ import java.io.IOException;
 
 /**
  * Servlet for staff login authentication
+ * 
+ * Password Security:
+ * - Passwords are hashed using BCrypt in the database
+ * - When authenticating: AccountDAO.authenticate() uses BCrypt.checkpw() for safe comparison
+ * - When creating new accounts: Use AccountDAO.hashPassword(plainPassword) to hash before storing
  */
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
@@ -48,7 +53,7 @@ public class LoginServlet extends HttpServlet {
         }
 
         try {
-            // Authenticate user
+            // Authenticate user (uses BCrypt for secure password verification)
             Account account = accountDAO.authenticate(username, password);
 
             if (account == null) {

@@ -242,6 +242,14 @@
                 <span>hoặc</span>
             </div>
 
+            <a href="${pageContext.request.contextPath}/register" class="btn btn-secondary">
+                📝 Đăng ký
+            </a>
+
+            <div class="divider">
+                <span>hoặc</span>
+            </div>
+
             <a href="${pageContext.request.contextPath}/customer" class="btn btn-secondary">
                 Truy cập với tư cách Khách hàng
             </a>

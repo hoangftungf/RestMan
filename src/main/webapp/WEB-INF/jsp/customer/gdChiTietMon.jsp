@@ -79,7 +79,6 @@
         </main>
 
         <footer>
-            <button onclick="history.back()" class="btn btn-secondary">← Quay lại</button>
             <p>&copy; 2025 RestMan. All rights reserved.</p>
         </footer>
     </div>

@@ -29,6 +29,9 @@
     <request-character-encoding>UTF-8</request-character-encoding>
     <response-character-encoding>UTF-8</response-character-encoding>
 
+    <!-- Servlet Mappings (if using servlet definitions instead of annotations) -->
+    <!-- Note: Most servlets use @WebServlet annotations instead -->
+
     <!-- Error pages -->
     <error-page>
         <error-code>404</error-code>
