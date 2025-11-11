@@ -35,7 +35,7 @@ public class InvoiceDAO {
      */
     public List<Invoice> findByOrderId(int orderId) throws SQLException {
         List<Invoice> invoices = new ArrayList<>();
-        String sql = "SELECT * FROM tblInvoice WHERE orderId = ? ORDER BY issueDate DESC";
+        String sql = "SELECT * FROM tblInvoice WHERE tblOrderId = ? ORDER BY id DESC";
 
         try (Connection conn = DBUtil.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -56,9 +56,6 @@ public class InvoiceDAO {
     private Invoice mapResultSetToInvoice(ResultSet rs) throws SQLException {
         Invoice invoice = new Invoice();
         invoice.setId(rs.getInt("id"));
-        invoice.setInvoiceNumber(rs.getString("invoiceNumber"));
-        invoice.setIssueDate(rs.getTimestamp("issueDate"));
-
         String paymentMethodStr = rs.getString("paymentMethod");
         invoice.setPaymentMethod(paymentMethodStr != null ? PaymentMethod.valueOf(paymentMethodStr) : null);
 
@@ -66,11 +63,10 @@ public class InvoiceDAO {
         invoice.setStatus(statusStr != null ? InvoiceStatus.valueOf(statusStr) : null);
 
         invoice.setTotal(rs.getBigDecimal("total"));
-        invoice.setPaidAmount(rs.getBigDecimal("paidAmount"));
-        invoice.setOrderId(rs.getInt("orderId"));
+        invoice.setOrderId(rs.getInt("tblOrderId"));
 
-        Integer cashierStaffId = rs.getObject("cashierStaffId", Integer.class);
-        invoice.setCashierStaffId(cashierStaffId);
+        Integer accountId = rs.getObject("tblAccountId", Integer.class);
+        invoice.setAccountId(accountId);
 
         return invoice;
     }

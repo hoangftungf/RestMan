@@ -2,6 +2,7 @@ package dao;
 
 import model.enums.InvoiceStatus;
 import model.enums.MembershipTier;
+import model.enums.OrderStatus;
 import model.vm.CustomerRevenueRow;
 import model.vm.OrderDetailVM;
 import util.DBUtil;
@@ -12,51 +13,55 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * DAO for reporting and analytics queries
+ * DAO for reporting and analytics queries aligned with the redesigned schema.
  */
 public class ReportingDAO {
 
     /**
-     * Get customer revenue report with filtering and pagination
+     * Build revenue report rows that include both account customers and walk-in guests.
      */
     public List<CustomerRevenueRow> customerRevenue(Timestamp fromDate, Timestamp toDate,
-                                                     MembershipTier tier, BigDecimal minRevenue,
-                                                     Integer topN, boolean includeUnpaid,
-                                                     int page, int pageSize) throws SQLException {
+                                                    MembershipTier tier, BigDecimal minRevenue,
+                                                    Integer topN, boolean includeUnpaid,
+                                                    int page, int pageSize) throws SQLException {
         List<CustomerRevenueRow> results = new ArrayList<>();
 
         StringBuilder sql = new StringBuilder();
-        sql.append("SELECT c.id as customerId, c.fullName, c.phone, c.email, ");
+        sql.append("SELECT ");
+        sql.append("CASE WHEN o.tblAccountId IS NOT NULL THEN CONCAT('ACC-', o.tblAccountId) ");
+        sql.append("     ELSE CONCAT('GUEST-', COALESCE(o.phone,''), '-', COALESCE(o.email,''), '-', COALESCE(o.name,'')) ");
+        sql.append("END AS customerKey, ");
+        sql.append("o.tblAccountId AS accountId, ");
+        sql.append("o.tblAccountId IS NULL AS isGuest, ");
+        sql.append("COALESCE(a.fullName, o.name) AS fullName, ");
+        sql.append("COALESCE(a.phone, o.phone) AS phone, ");
+        sql.append("COALESCE(a.email, o.email) AS email, ");
         sql.append("mc.tier, ");
-        sql.append("COUNT(DISTINCT o.id) as orderCount, ");
-        sql.append("COUNT(DISTINCT i.id) as invoiceCount, ");
-        sql.append("COALESCE(SUM(i.total), 0) as totalRevenue ");
-        sql.append("FROM tblCustomer c ");
-        sql.append("INNER JOIN tblOrder o ON c.id = o.customerId ");
-        sql.append("INNER JOIN tblInvoice i ON o.id = i.orderId ");
-        sql.append("LEFT JOIN tblMembershipCard mc ON c.id = mc.customerId ");
-        sql.append("WHERE i.issueDate BETWEEN ? AND ? ");
+        sql.append("COUNT(DISTINCT o.id) AS orderCount, ");
+        sql.append("COUNT(DISTINCT i.id) AS invoiceCount, ");
+        sql.append("COALESCE(SUM(i.total), 0) AS totalRevenue ");
+        sql.append("FROM tblOrder o ");
+        sql.append("INNER JOIN tblInvoice i ON o.id = i.tblOrderId ");
+        sql.append("LEFT JOIN tblAccount a ON o.tblAccountId = a.id ");
+        sql.append("LEFT JOIN tblMembershipCard mc ON o.tblAccountId = mc.customerId ");
+        sql.append("WHERE o.createAt BETWEEN ? AND ? ");
 
-        // Filter by invoice status
         if (!includeUnpaid) {
             sql.append("AND i.status IN ('PAID', 'PARTIALLY_PAID') ");
         }
 
-        // Filter by membership tier
         if (tier != null) {
             sql.append("AND mc.tier = ? ");
         }
 
-        sql.append("GROUP BY c.id, c.fullName, c.phone, c.email, mc.tier ");
+        sql.append("GROUP BY customerKey, o.tblAccountId, isGuest, fullName, phone, email, mc.tier ");
 
-        // Filter by minimum revenue
         if (minRevenue != null) {
             sql.append("HAVING totalRevenue >= ? ");
         }
 
         sql.append("ORDER BY totalRevenue DESC ");
 
-        // Limit to top N if specified
         if (topN != null && topN > 0) {
             sql.append("LIMIT ? ");
         } else {
@@ -88,7 +93,9 @@ public class ReportingDAO {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     CustomerRevenueRow row = new CustomerRevenueRow();
-                    row.setCustomerId(rs.getInt("customerId"));
+                    row.setCustomerKey(rs.getString("customerKey"));
+                    row.setAccountId(rs.getObject("accountId", Integer.class));
+                    row.setGuest(rs.getBoolean("isGuest"));
                     row.setFullName(rs.getString("fullName"));
                     row.setPhone(rs.getString("phone"));
                     row.setEmail(rs.getString("email"));
@@ -107,72 +114,40 @@ public class ReportingDAO {
     }
 
     /**
-     * Get customer orders within date range
-     */
-    public List<OrderDetailVM> customerOrders(int customerId, Timestamp fromDate, Timestamp toDate) throws SQLException {
-        List<OrderDetailVM> orders = new ArrayList<>();
-
-        String sql = "SELECT DISTINCT o.id as orderId, o.orderNumber, o.createdAt, " +
-                     "i.status as invoiceStatus " +
-                     "FROM tblOrder o " +
-                     "INNER JOIN tblInvoice i ON o.id = i.orderId " +
-                     "WHERE o.customerId = ? " +
-                     "AND i.issueDate BETWEEN ? AND ? " +
-                     "AND i.status IN ('PAID', 'PARTIALLY_PAID') " +
-                     "ORDER BY o.createdAt DESC";
-
-        try (Connection conn = DBUtil.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql)) {
-
-            ps.setInt(1, customerId);
-            ps.setTimestamp(2, fromDate);
-            ps.setTimestamp(3, toDate);
-
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    OrderDetailVM order = new OrderDetailVM();
-                    order.setOrderId(rs.getInt("orderId"));
-                    order.setOrderNumber(rs.getString("orderNumber"));
-                    order.setCreatedAt(rs.getTimestamp("createdAt"));
-
-                    String statusStr = rs.getString("invoiceStatus");
-                    order.setInvoiceStatus(statusStr != null ? InvoiceStatus.valueOf(statusStr) : null);
-
-                    orders.add(order);
-                }
-            }
-        }
-        return orders;
-    }
-
-    /**
-     * Count total customers matching the revenue filter
+     * Count grouped customers for pagination.
      */
     public int countCustomerRevenue(Timestamp fromDate, Timestamp toDate,
-                                     MembershipTier tier, BigDecimal minRevenue,
-                                     boolean includeUnpaid) throws SQLException {
-        StringBuilder sql = new StringBuilder();
-        sql.append("SELECT COUNT(DISTINCT c.id) ");
-        sql.append("FROM tblCustomer c ");
-        sql.append("INNER JOIN tblOrder o ON c.id = o.customerId ");
-        sql.append("INNER JOIN tblInvoice i ON o.id = i.orderId ");
-        sql.append("LEFT JOIN tblMembershipCard mc ON c.id = mc.customerId ");
-        sql.append("WHERE i.issueDate BETWEEN ? AND ? ");
+                                    MembershipTier tier, BigDecimal minRevenue,
+                                    boolean includeUnpaid) throws SQLException {
+        StringBuilder base = new StringBuilder();
+        base.append("SELECT ");
+        base.append("CASE WHEN o.tblAccountId IS NOT NULL THEN CONCAT('ACC-', o.tblAccountId) ");
+        base.append("     ELSE CONCAT('GUEST-', COALESCE(o.phone,''), '-', COALESCE(o.email,''), '-', COALESCE(o.name,'')) ");
+        base.append("END AS customerKey, ");
+        base.append("COALESCE(SUM(i.total), 0) AS totalRevenue ");
+        base.append("FROM tblOrder o ");
+        base.append("INNER JOIN tblInvoice i ON o.id = i.tblOrderId ");
+        base.append("LEFT JOIN tblMembershipCard mc ON o.tblAccountId = mc.customerId ");
+        base.append("WHERE o.createAt BETWEEN ? AND ? ");
 
         if (!includeUnpaid) {
-            sql.append("AND i.status IN ('PAID', 'PARTIALLY_PAID') ");
+            base.append("AND i.status IN ('PAID', 'PARTIALLY_PAID') ");
         }
 
         if (tier != null) {
-            sql.append("AND mc.tier = ? ");
+            base.append("AND mc.tier = ? ");
         }
+
+        base.append("GROUP BY customerKey ");
 
         if (minRevenue != null) {
-            sql.append("GROUP BY c.id HAVING SUM(i.total) >= ? ");
+            base.append("HAVING totalRevenue >= ? ");
         }
 
+        String countSql = "SELECT COUNT(*) FROM (" + base + ") grouped";
+
         try (Connection conn = DBUtil.getConnection();
-             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+             PreparedStatement ps = conn.prepareStatement(countSql)) {
 
             int paramIndex = 1;
             ps.setTimestamp(paramIndex++, fromDate);
@@ -193,5 +168,70 @@ public class ReportingDAO {
             }
         }
         return 0;
+    }
+
+    /**
+     * Fetch orders linked to either an account customer or a guest (identified by contact info).
+     */
+    public List<OrderDetailVM> customerOrders(boolean guest, Integer accountId,
+                                              String guestName, String guestPhone, String guestEmail,
+                                              Timestamp fromDate, Timestamp toDate) throws SQLException {
+        List<OrderDetailVM> orders = new ArrayList<>();
+
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT DISTINCT o.id AS orderId, o.createAt AS createdAt, o.status AS orderStatus, ");
+        sql.append("i.status AS invoiceStatus, COALESCE(a.fullName, o.name) AS fullName, ");
+        sql.append("COALESCE(a.phone, o.phone) AS phone ");
+        sql.append("FROM tblOrder o ");
+        sql.append("INNER JOIN tblInvoice i ON o.id = i.tblOrderId ");
+        sql.append("LEFT JOIN tblAccount a ON o.tblAccountId = a.id ");
+        sql.append("WHERE o.createAt BETWEEN ? AND ? ");
+        sql.append("AND i.status IN ('PAID', 'PARTIALLY_PAID') ");
+
+        if (guest) {
+            sql.append("AND o.tblAccountId IS NULL ");
+            sql.append("AND COALESCE(o.name, '') = ? ");
+            sql.append("AND COALESCE(o.phone, '') = ? ");
+            sql.append("AND COALESCE(o.email, '') = ? ");
+        } else {
+            sql.append("AND o.tblAccountId = ? ");
+        }
+
+        sql.append("ORDER BY o.createAt DESC");
+
+        try (Connection conn = DBUtil.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+
+            int paramIndex = 1;
+            ps.setTimestamp(paramIndex++, fromDate);
+            ps.setTimestamp(paramIndex++, toDate);
+
+            if (guest) {
+                ps.setString(paramIndex++, guestName != null ? guestName : "");
+                ps.setString(paramIndex++, guestPhone != null ? guestPhone : "");
+                ps.setString(paramIndex++, guestEmail != null ? guestEmail : "");
+            } else {
+                ps.setInt(paramIndex++, accountId);
+            }
+
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    OrderDetailVM vm = new OrderDetailVM();
+                    vm.setOrderId(rs.getInt("orderId"));
+                    vm.setCreatedAt(rs.getTimestamp("createdAt"));
+
+                    String invoiceStatus = rs.getString("invoiceStatus");
+                    vm.setInvoiceStatus(invoiceStatus != null ? InvoiceStatus.valueOf(invoiceStatus) : null);
+
+                    String orderStatus = rs.getString("orderStatus");
+                    vm.setOrderStatus(orderStatus != null ? OrderStatus.valueOf(orderStatus) : null);
+
+                    vm.setCustomerName(rs.getString("fullName"));
+                    vm.setPhone(rs.getString("phone"));
+                    orders.add(vm);
+                }
+            }
+        }
+        return orders;
     }
 }

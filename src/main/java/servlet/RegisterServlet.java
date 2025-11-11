@@ -33,7 +33,6 @@ public class RegisterServlet extends HttpServlet {
         String confirmPassword = req.getParameter("confirmPassword");
         String email = req.getParameter("email");
         String phone = req.getParameter("phone");
-        String address = req.getParameter("address");
         String genderStr = req.getParameter("gender");
         String dateOfBirthStr = req.getParameter("dateOfBirth");
 
@@ -51,7 +50,6 @@ public class RegisterServlet extends HttpServlet {
                 req.setAttribute("username", username);
                 req.setAttribute("email", email);
                 req.setAttribute("phone", phone);
-                req.setAttribute("address", address);
                 req.getRequestDispatcher("/WEB-INF/jsp/auth/gdDangKy.jsp").forward(req, resp);
                 return;
             }
@@ -64,7 +62,6 @@ public class RegisterServlet extends HttpServlet {
             account.setPassword(AccountDAO.hashPassword(password));
             account.setEmail(email);
             account.setPhone(phone);
-            account.setAddress(address);
             
             // Set gender if provided
             if (genderStr != null && !genderStr.isEmpty()) {
@@ -103,7 +100,6 @@ public class RegisterServlet extends HttpServlet {
                 req.setAttribute("username", username);
                 req.setAttribute("email", email);
                 req.setAttribute("phone", phone);
-                req.setAttribute("address", address);
                 req.getRequestDispatcher("/WEB-INF/jsp/auth/gdDangKy.jsp").forward(req, resp);
             }
 
@@ -114,7 +110,6 @@ public class RegisterServlet extends HttpServlet {
             req.setAttribute("username", username);
             req.setAttribute("email", email);
             req.setAttribute("phone", phone);
-            req.setAttribute("address", address);
             req.getRequestDispatcher("/WEB-INF/jsp/auth/gdDangKy.jsp").forward(req, resp);
         }
     }

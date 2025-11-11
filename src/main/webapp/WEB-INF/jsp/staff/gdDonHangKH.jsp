@@ -22,6 +22,28 @@
         </header>
 
         <main class="content">
+            <div class="order-info">
+                <h2>Thông Tin Khách Hàng</h2>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="label">Tên khách:</span>
+                        <span class="value">${customerName}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Số điện thoại:</span>
+                        <span class="value">${customerPhone}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Email:</span>
+                        <span class="value">${customerEmail}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Khoảng thời gian:</span>
+                        <span class="value">${fromDate} - ${toDate}</span>
+                    </div>
+                </div>
+            </div>
+
             <c:choose>
                 <c:when test="${empty orders}">
                     <div class="alert alert-info">
@@ -34,22 +56,18 @@
                             <tr>
                                 <th>Mã Đơn Hàng</th>
                                 <th>Thời Gian Đặt</th>
-                                <th>Kênh</th>
-                                <th>Trạng Thái</th>
+                                <th>Trạng Thái Đơn</th>
+                                <th>Trạng Thái Hóa Đơn</th>
                                 <th>Thao Tác</th>
                             </tr>
                         </thead>
                         <tbody>
                             <c:forEach var="order" items="${orders}">
                                 <tr>
-                                    <td>${order.orderNumber}</td>
+                                    <td>${order.displayCode}</td>
                                     <td>${order.createdAt}</td>
-                                    <td>Tại quán</td>
-                                    <td>
-                                        <span class="badge badge-${order.invoiceStatus}">
-                                            ${order.invoiceStatus}
-                                        </span>
-                                    </td>
+                                    <td><span class="badge badge-${order.orderStatus}">${order.orderStatus}</span></td>
+                                    <td><span class="badge badge-${order.invoiceStatus}">${order.invoiceStatus}</span></td>
                                     <td>
                                         <a href="${pageContext.request.contextPath}/report/customer-revenue?action=viewOrder&orderId=${order.orderId}"
                                            class="btn btn-small">Xem chi tiết</a>

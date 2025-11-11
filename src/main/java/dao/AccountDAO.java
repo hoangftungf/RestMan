@@ -74,7 +74,7 @@ public class AccountDAO {
      * Create new account in database
      */
     public boolean create(Account account) throws SQLException {
-        String sql = "INSERT INTO tblAccount (fullName, username, password, email, phone, address, gender, dateOfBirth, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO tblAccount (fullName, username, password, email, phone, gender, dateOfBirth, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = DBUtil.getConnection();
                 PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -84,10 +84,9 @@ public class AccountDAO {
             ps.setString(3, account.getPassword());
             ps.setString(4, account.getEmail());
             ps.setString(5, account.getPhone());
-            ps.setString(6, account.getAddress());
-            ps.setString(7, account.getGender() != null ? account.getGender().name() : null);
-            ps.setDate(8, account.getDateOfBirth());
-            ps.setString(9, account.getRole() != null ? account.getRole().name() : "CUSTOMER");
+            ps.setString(6, account.getGender() != null ? account.getGender().name() : null);
+            ps.setDate(7, account.getDateOfBirth());
+            ps.setString(8, account.getRole() != null ? account.getRole().name() : "CUSTOMER");
 
             int rowsAffected = ps.executeUpdate();
             return rowsAffected > 0;
@@ -105,7 +104,6 @@ public class AccountDAO {
         account.setPassword(rs.getString("password"));
         account.setEmail(rs.getString("email"));
         account.setPhone(rs.getString("phone"));
-        account.setAddress(rs.getString("address"));
 
         String genderStr = rs.getString("gender");
         account.setGender(genderStr != null ? Gender.valueOf(genderStr) : null);

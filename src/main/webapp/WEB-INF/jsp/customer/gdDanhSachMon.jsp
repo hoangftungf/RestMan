@@ -8,6 +8,66 @@
     <title>Tìm Kiếm Món Ăn - RestMan</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/common.css">
     <style>
+        body {
+            background: #f5f5f5;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: transparent;
+            padding-bottom: 40px;
+        }
+
+        .page-header {
+            background: #fff;
+            color: #1f2a44;
+            padding: 24px 20px 18px;
+            border-bottom: 2px solid #4a74db;
+            margin-bottom: 30px;
+            width: 100vw;
+            position: relative;
+            left: 50%;
+            right: 50%;
+            margin-left: -50vw;
+            margin-right: -50vw;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+        }
+
+        .page-header h1 {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .breadcrumb {
+            display: inline-flex;
+            gap: 8px;
+            font-size: 0.95rem;
+        }
+
+        .breadcrumb a {
+            color: #4a74db;
+            text-decoration: none;
+        }
+
+        .content {
+            width: 100vw;
+            position: relative;
+            left: 50%;
+            right: 50%;
+            margin-left: -50vw;
+            margin-right: -50vw;
+            padding: 40px 0;
+            background: #f8f8f8;
+        }
+
+        .content > * {
+            max-width: 1100px;
+            margin: 0 auto 30px;
+            padding: 0 32px;
+        }
+
         /* Search Section */
         .search-section {
             background: white;
@@ -189,19 +249,19 @@
             margin-bottom: 15px;
         }
 
-        .btn-view {
+        .dish-card .btn-view {
             background: #0066cc;
             color: white;
-            padding: 10px 20px;
-            display: inline-block;
-            text-decoration: none;
+            padding: 10px 24px;
             border-radius: 6px;
             font-weight: 600;
-            width: 100%;
+            width: 80%;
             text-align: center;
+            display: block;
+            margin: 0 auto 10px;
         }
 
-        .btn-view:hover {
+        .dish-card .btn-view:hover {
             background: #0052a3;
         }
 
@@ -382,17 +442,18 @@
                     <div class="dishes-grid">
                         <c:forEach var="dish" items="${dishes}">
                             <div class="dish-card">
-                                <c:if test="${not empty dish.imageUrl}">
-                                    <img src="${pageContext.request.contextPath}${dish.imageUrl}"
-                                         alt="${dish.name}"
-                                         class="dish-image"
-                                         onerror="this.src='${pageContext.request.contextPath}/images/no-image.jpg'">
-                                </c:if>
-                                <c:if test="${empty dish.imageUrl}">
-                                    <img src="${pageContext.request.contextPath}/images/no-image.jpg"
-                                         alt="No image"
-                                         class="dish-image">
-                                </c:if>
+                                <c:choose>
+                                    <c:when test="${not empty dish.imageUrl}">
+                                        <img src="${pageContext.request.contextPath}${dish.imageUrl}"
+                                             alt="${dish.name}"
+                                             class="dish-image">
+                                    </c:when>
+                                    <c:otherwise>
+                                        <img src="${pageContext.request.contextPath}/images/no-image.jpg"
+                                             alt="No image"
+                                             class="dish-image">
+                                    </c:otherwise>
+                                </c:choose>
                                 <div class="dish-info">
                                     <h3>${dish.name}</h3>
                                     <p class="dish-category">${dish.category}</p>

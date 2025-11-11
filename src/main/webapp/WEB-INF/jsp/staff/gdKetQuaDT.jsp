@@ -383,12 +383,23 @@
                                 <th>Số Đơn Hàng</th>
                                 <th>Số Hóa Đơn</th>
                                 <th>Tổng Doanh Thu</th>
-                                <th>Ngày Tham Gia</th>
+                                <th>Loại KH</th>
                                 <th>Thao Tác</th>
                             </tr>
                         </thead>
                         <tbody>
                             <c:forEach var="customer" items="${customers}" varStatus="status">
+                                <c:url var="customerDetailUrl" value="${pageContext.request.contextPath}/report/customer-revenue">
+                                    <c:param name="action" value="viewCustomerDetail"/>
+                                    <c:param name="customerKey" value="${customer.customerKey}"/>
+                                    <c:param name="guest" value="${customer.guest}"/>
+                                    <c:param name="accountId" value="${customer.accountId != null ? customer.accountId : ''}"/>
+                                    <c:param name="customerName" value="${customer.fullName}"/>
+                                    <c:param name="phone" value="${customer.phone}"/>
+                                    <c:param name="email" value="${customer.email}"/>
+                                    <c:param name="fromDate" value="${fromDate}"/>
+                                    <c:param name="toDate" value="${toDate}"/>
+                                </c:url>
                                 <tr>
                                     <td>${(currentPage - 1) * pageSize + status.index + 1}</td>
                                     <td>${customer.fullName}</td>
@@ -402,10 +413,9 @@
                                     <td>${customer.orderCount}</td>
                                     <td>${customer.invoiceCount}</td>
                                     <td class="amount">${customer.formattedRevenue}</td>
-                                    <td>12/5/2023</td>
+                                    <td>${customer.guest ? 'Khách lẻ' : 'Tài khoản'}</td>
                                     <td>
-                                        <a href="${pageContext.request.contextPath}/report/customer-revenue?action=viewCustomerDetail&customerId=${customer.customerId}&fromDate=${fromDate}&toDate=${toDate}"
-                                           class="btn btn-small">Chi tiết</a>
+                                        <a href="${customerDetailUrl}" class="btn btn-small">Chi tiết</a>
                                     </td>
                                 </tr>
                             </c:forEach>

@@ -6,6 +6,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Servlet for staff login authentication
@@ -17,7 +19,8 @@ import java.io.IOException;
  */
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
-    private AccountDAO accountDAO = new AccountDAO();
+    private static final Logger LOGGER = Logger.getLogger(LoginServlet.class.getName());
+    private final AccountDAO accountDAO = new AccountDAO();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -87,7 +90,9 @@ public class LoginServlet extends HttpServlet {
             resp.sendRedirect(req.getContextPath() + "/staff");
 
         } catch (Exception e) {
-            e.printStackTrace();
+            LOGGER.log(Level.SEVERE, "Login failed for user {0}: {1}",
+                    new Object[]{username, e.getMessage()});
+            LOGGER.log(Level.SEVERE, "Stacktrace", e);
             req.setAttribute("error", "Có lỗi xảy ra trong quá trình đăng nhập. Vui lòng thử lại.");
             req.setAttribute("username", username);
             req.getRequestDispatcher("/WEB-INF/jsp/auth/gdDangNhap.jsp").forward(req, resp);

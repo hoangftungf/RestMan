@@ -2,7 +2,6 @@ package dao;
 
 import model.Order;
 import model.OrderItem;
-import model.enums.OrderChannel;
 import model.enums.OrderStatus;
 import util.DBUtil;
 
@@ -55,6 +54,7 @@ public class OrderDAO {
                     item.setDiscount(rs.getBigDecimal("discount"));
                     item.setNote(rs.getString("note"));
                     item.setOrderId(rs.getInt("orderId"));
+                    item.setDishName(rs.getString("dishName"));
 
                     Integer dishId = rs.getObject("dishId", Integer.class);
                     item.setDishId(dishId);
@@ -75,25 +75,24 @@ public class OrderDAO {
     private Order mapResultSetToOrder(ResultSet rs) throws SQLException {
         Order order = new Order();
         order.setId(rs.getInt("id"));
-        order.setOrderNumber(rs.getString("orderNumber"));
-
-        String channelStr = rs.getString("channel");
-        order.setChannel(channelStr != null ? OrderChannel.valueOf(channelStr) : null);
+        order.setName(rs.getString("name"));
+        order.setEmail(rs.getString("email"));
+        order.setPhone(rs.getString("phone"));
+        order.setNumberOfGuests(rs.getObject("number", Integer.class));
+        order.setNote(rs.getString("note"));
 
         String statusStr = rs.getString("status");
         order.setStatus(statusStr != null ? OrderStatus.valueOf(statusStr) : null);
 
-        order.setCreatedAt(rs.getTimestamp("createdAt"));
-        order.setUpdatedAt(rs.getTimestamp("updatedAt"));
+        order.setSubTotal(rs.getBigDecimal("subTotal"));
+        order.setCreatedAt(rs.getTimestamp("createAt"));
+        order.setUpdatedAt(rs.getTimestamp("updateAt"));
 
-        Integer customerId = rs.getObject("customerId", Integer.class);
-        order.setCustomerId(customerId);
-
-        Integer saleStaffId = rs.getObject("saleStaffId", Integer.class);
-        order.setSaleStaffId(saleStaffId);
-
-        Integer tableId = rs.getObject("tableId", Integer.class);
+        Integer tableId = rs.getObject("tblTableId", Integer.class);
         order.setTableId(tableId);
+
+        Integer accountId = rs.getObject("tblAccountId", Integer.class);
+        order.setAccountId(accountId);
 
         return order;
     }

@@ -27,16 +27,35 @@
                 <h2>Thông Tin Đơn Hàng</h2>
                 <div class="info-grid">
                     <div class="info-item">
-                        <span class="label">Mã đơn hàng:</span>
-                        <span class="value">${order.orderNumber}</span>
+                        <span class="label">Khách hàng:</span>
+                        <span class="value">${order.name}</span>
                     </div>
                     <div class="info-item">
                         <span class="label">Thời gian:</span>
                         <span class="value">${order.createdAt}</span>
                     </div>
                     <div class="info-item">
-                        <span class="label">Kênh:</span>
-                        <span class="value">${order.channel}</span>
+                        <span class="label">Số điện thoại:</span>
+                        <span class="value">${order.phone}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Email:</span>
+                        <span class="value">${order.email}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Số khách:</span>
+                        <span class="value">${order.numberOfGuests}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="label">Bàn phục vụ:</span>
+                        <span class="value">
+                            <c:choose>
+                                <c:when test="${not empty table}">
+                                    Bàn ${table.tableNumber} · ${table.capacity} khách · Khu ${table.location}
+                                </c:when>
+                                <c:otherwise>Mang đi</c:otherwise>
+                            </c:choose>
+                        </span>
                     </div>
                     <div class="info-item">
                         <span class="label">Trạng thái:</span>
@@ -57,14 +76,14 @@
                             <th>Thành Tiền</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <c:forEach var="item" items="${items}">
-                            <tr>
-                                <td>Phở Bò Tái</td>
-                                <td>${item.quantity}</td>
-                                <td><fmt:formatNumber value="${item.unitPrice}" type="number" groupingUsed="true"/> đ</td>
-                                <td><fmt:formatNumber value="${item.discount}" type="number" groupingUsed="true"/> đ</td>
-                                <td class="amount"><fmt:formatNumber value="${item.lineTotal}" type="number" groupingUsed="true"/> đ</td>
+                        <tbody>
+                            <c:forEach var="item" items="${items}">
+                                <tr>
+                                    <td>${item.dishName}</td>
+                                    <td>${item.quantity}</td>
+                                    <td><fmt:formatNumber value="${item.unitPrice}" type="number" groupingUsed="true"/> đ</td>
+                                    <td><fmt:formatNumber value="${item.discount}" type="number" groupingUsed="true"/> đ</td>
+                                    <td class="amount"><fmt:formatNumber value="${item.lineTotal}" type="number" groupingUsed="true"/> đ</td>
                             </tr>
                         </c:forEach>
                         <tr class="total-row">
@@ -80,23 +99,21 @@
                 <table class="data-table">
                     <thead>
                         <tr>
-                            <th>Mã Hóa Đơn</th>
-                            <th>Ngày Xuất</th>
+                            <th>ID Hóa Đơn</th>
                             <th>Tổng Tiền</th>
                             <th>Phương Thức</th>
                             <th>Trạng Thái</th>
                             <th>Thao Tác</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <c:forEach var="invoice" items="${invoices}">
-                            <tr>
-                                <td>${invoice.invoiceNumber}</td>
-                                <td>${invoice.issueDate}</td>
-                                <td class="amount"><fmt:formatNumber value="${invoice.total}" type="number" groupingUsed="true"/> đ</td>
-                                <td>${invoice.paymentMethod}</td>
-                                <td>
-                                    <span class="badge badge-${invoice.status}">${invoice.status}</span>
+                        <tbody>
+                            <c:forEach var="invoice" items="${invoices}">
+                                <tr>
+                                    <td>#${invoice.id}</td>
+                                    <td class="amount"><fmt:formatNumber value="${invoice.total}" type="number" groupingUsed="true"/> đ</td>
+                                    <td>${invoice.paymentMethod}</td>
+                                    <td>
+                                        <span class="badge badge-${invoice.status}">${invoice.status}</span>
                                 </td>
                                 <td>
                                     <a href="${pageContext.request.contextPath}/report/customer-revenue?action=viewInvoice&invoiceId=${invoice.id}"

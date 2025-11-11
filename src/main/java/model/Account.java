@@ -12,7 +12,6 @@ public class Account {
     private String password;
     private String email;
     private String phone;
-    private String address;
     private Gender gender;
     private Date dateOfBirth;
     private Role role;
@@ -22,14 +21,13 @@ public class Account {
     public Account() {}
 
     public Account(int id, String fullName, String username, String password, String email,
-                   String phone, String address, Gender gender, Date dateOfBirth, Role role) {
+                   String phone, Gender gender, Date dateOfBirth, Role role) {
         this.id = id;
         this.fullName = fullName;
         this.username = username;
         this.password = password;
         this.email = email;
         this.phone = phone;
-        this.address = address;
         this.gender = gender;
         this.dateOfBirth = dateOfBirth;
         this.role = role;
@@ -53,9 +51,6 @@ public class Account {
 
     public String getPhone() { return phone; }
     public void setPhone(String phone) { this.phone = phone; }
-
-    public String getAddress() { return address; }
-    public void setAddress(String address) { this.address = address; }
 
     public Gender getGender() { return gender; }
     public void setGender(Gender gender) { this.gender = gender; }

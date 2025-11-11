@@ -1,33 +1,33 @@
 package model;
 
 import model.enums.MembershipTier;
-import java.sql.Timestamp;
+import java.sql.Date;
 
 public class MembershipCard {
     private int id;
     private String cardNumber;
     private MembershipTier tier;
-    private int points;
-    private Timestamp issuedAt;
-    private Timestamp expiredAt;
+    private int point;
+    private Date createdAt;
+    private Date expiredAt;
     private String status;
     private int customerId;
-    private Integer issuedByStaffId;
+    private Integer staffId;
 
     public MembershipCard() {}
 
-    public MembershipCard(int id, String cardNumber, MembershipTier tier, int points,
-                          Timestamp issuedAt, Timestamp expiredAt, String status, int customerId,
-                          Integer issuedByStaffId) {
+    public MembershipCard(int id, String cardNumber, MembershipTier tier, int point,
+                          Date createdAt, Date expiredAt, String status, int customerId,
+                          Integer staffId) {
         this.id = id;
         this.cardNumber = cardNumber;
         this.tier = tier;
-        this.points = points;
-        this.issuedAt = issuedAt;
+        this.point = point;
+        this.createdAt = createdAt;
         this.expiredAt = expiredAt;
         this.status = status;
         this.customerId = customerId;
-        this.issuedByStaffId = issuedByStaffId;
+        this.staffId = staffId;
     }
 
     // Getters and Setters
@@ -40,14 +40,14 @@ public class MembershipCard {
     public MembershipTier getTier() { return tier; }
     public void setTier(MembershipTier tier) { this.tier = tier; }
 
-    public int getPoints() { return points; }
-    public void setPoints(int points) { this.points = points; }
+    public int getPoint() { return point; }
+    public void setPoint(int point) { this.point = point; }
 
-    public Timestamp getIssuedAt() { return issuedAt; }
-    public void setIssuedAt(Timestamp issuedAt) { this.issuedAt = issuedAt; }
+    public Date getCreatedAt() { return createdAt; }
+    public void setCreatedAt(Date createdAt) { this.createdAt = createdAt; }
 
-    public Timestamp getExpiredAt() { return expiredAt; }
-    public void setExpiredAt(Timestamp expiredAt) { this.expiredAt = expiredAt; }
+    public Date getExpiredAt() { return expiredAt; }
+    public void setExpiredAt(Date expiredAt) { this.expiredAt = expiredAt; }
 
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
@@ -55,6 +55,6 @@ public class MembershipCard {
     public int getCustomerId() { return customerId; }
     public void setCustomerId(int customerId) { this.customerId = customerId; }
 
-    public Integer getIssuedByStaffId() { return issuedByStaffId; }
-    public void setIssuedByStaffId(Integer issuedByStaffId) { this.issuedByStaffId = issuedByStaffId; }
+    public Integer getStaffId() { return staffId; }
+    public void setStaffId(Integer staffId) { this.staffId = staffId; }
 }

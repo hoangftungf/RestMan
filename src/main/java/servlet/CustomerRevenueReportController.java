@@ -3,9 +3,11 @@ package servlet;
 import dao.InvoiceDAO;
 import dao.OrderDAO;
 import dao.ReportingDAO;
+import dao.TableDAO;
 import model.Invoice;
 import model.Order;
 import model.OrderItem;
+import model.Table;
 import model.enums.MembershipTier;
 import model.vm.CustomerRevenueRow;
 import model.vm.OrderDetailVM;
@@ -29,6 +31,7 @@ public class CustomerRevenueReportController extends HttpServlet {
     private ReportingDAO reportingDAO = new ReportingDAO();
     private OrderDAO orderDAO = new OrderDAO();
     private InvoiceDAO invoiceDAO = new InvoiceDAO();
+    private TableDAO tableDAO = new TableDAO();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -216,7 +219,23 @@ public class CustomerRevenueReportController extends HttpServlet {
      * View customer detail with orders
      */
     private void viewCustomerDetail(HttpServletRequest req, HttpServletResponse resp) throws Exception {
-        int customerId = Integer.parseInt(req.getParameter("customerId"));
+        String customerKey = req.getParameter("customerKey");
+        boolean guest = Boolean.parseBoolean(req.getParameter("guest"));
+        String accountIdStr = req.getParameter("accountId");
+        Integer accountId = (accountIdStr != null && !accountIdStr.isEmpty()) ? Integer.valueOf(accountIdStr) : null;
+        String customerName = req.getParameter("customerName");
+        String phone = req.getParameter("phone");
+        String email = req.getParameter("email");
+
+        if (customerName == null) customerName = "";
+        if (phone == null) phone = "";
+        if (email == null) email = "";
+
+        if (!guest && accountId == null) {
+            req.setAttribute("error", "Thiếu mã khách hàng.");
+            resp.sendRedirect(req.getContextPath() + "/report/customer-revenue");
+            return;
+        }
         String fromDateStr = req.getParameter("fromDate");
         String toDateStr = req.getParameter("toDate");
 
@@ -236,10 +255,14 @@ public class CustomerRevenueReportController extends HttpServlet {
             return;
         }
 
-        List<OrderDetailVM> orders = reportingDAO.customerOrders(customerId, fromDate, toDate);
+        List<OrderDetailVM> orders = reportingDAO.customerOrders(guest, accountId, customerName, phone, email, fromDate, toDate);
 
         req.setAttribute("orders", orders);
-        req.setAttribute("customerId", customerId);
+        req.setAttribute("customerKey", customerKey);
+        req.setAttribute("isGuest", guest);
+        req.setAttribute("customerName", customerName);
+        req.setAttribute("customerPhone", phone);
+        req.setAttribute("customerEmail", email);
         req.setAttribute("fromDate", fromDateStr);
         req.setAttribute("toDate", toDateStr);
 
@@ -270,7 +293,13 @@ public class CustomerRevenueReportController extends HttpServlet {
 
         req.setAttribute("order", order);
         req.setAttribute("items", items);
+        Table table = null;
+        if (order.getTableId() != null) {
+            table = tableDAO.findById(order.getTableId());
+        }
+
         req.setAttribute("invoices", invoices);
+        req.setAttribute("table", table);
         req.setAttribute("orderTotal", orderTotal);
 
         req.getRequestDispatcher("/WEB-INF/jsp/staff/gdChiTietDon.jsp").forward(req, resp);
@@ -292,10 +321,15 @@ public class CustomerRevenueReportController extends HttpServlet {
         // Get order details
         Order order = orderDAO.findById(invoice.getOrderId());
         List<OrderItem> items = orderDAO.findItems(invoice.getOrderId());
+        Table table = null;
+        if (order != null && order.getTableId() != null) {
+            table = tableDAO.findById(order.getTableId());
+        }
 
         req.setAttribute("invoice", invoice);
         req.setAttribute("order", order);
         req.setAttribute("items", items);
+        req.setAttribute("table", table);
 
         req.getRequestDispatcher("/WEB-INF/jsp/staff/gdChiTietHD.jsp").forward(req, resp);
     }

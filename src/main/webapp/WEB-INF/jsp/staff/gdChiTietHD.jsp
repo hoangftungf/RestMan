@@ -32,7 +32,7 @@
 
                 <div class="invoice-title">
                     <h2>📄 HÓA ĐƠN THANH TOÁN</h2>
-                    <p>Mã hóa đơn: <strong>${invoice.invoiceNumber}</strong></p>
+                    <p>Mã hóa đơn: <strong>#${invoice.id}</strong></p>
                 </div>
 
                 <div class="invoice-info">
@@ -40,15 +40,26 @@
                     <div class="info-grid">
                         <div class="info-row">
                             <span class="label">Mã hóa đơn:</span>
-                            <span class="value">${invoice.invoiceNumber}</span>
+                            <span class="value">#${invoice.id}</span>
                         </div>
                         <div class="info-row">
                             <span class="label">Mã đơn hàng:</span>
-                            <span class="value">${order.orderNumber}</span>
+                            <span class="value">${order.id}</span>
                         </div>
                         <div class="info-row">
-                            <span class="label">Ngày xuất:</span>
-                            <span class="value">${invoice.issueDate}</span>
+                            <span class="label">Khách hàng:</span>
+                            <span class="value">${order.name}</span>
+                        </div>
+                        <div class="info-row">
+                            <span class="label">Bàn phục vụ:</span>
+                            <span class="value">
+                                <c:choose>
+                                    <c:when test="${not empty table}">
+                                        Bàn ${table.tableNumber} - ${table.capacity} khách (Khu ${table.location})
+                                    </c:when>
+                                    <c:otherwise>Mang đi</c:otherwise>
+                                </c:choose>
+                            </span>
                         </div>
                         <div class="info-row">
                             <span class="label">Phương thức thanh toán:</span>
@@ -78,7 +89,7 @@
                             <c:forEach var="item" items="${items}" varStatus="status">
                                 <tr>
                                     <td>${status.index + 1}</td>
-                                    <td>Phở Bò Tái</td>
+                                    <td>${item.dishName}</td>
                                     <td>${item.quantity}</td>
                                     <td><fmt:formatNumber value="${item.unitPrice}" type="number" groupingUsed="true"/> đ</td>
                                     <td><fmt:formatNumber value="${item.discount}" type="number" groupingUsed="true"/> đ</td>
@@ -115,7 +126,7 @@
                     <h3>Phương Thức Thanh Toán</h3>
                     <p><strong>Hình thức:</strong> ${invoice.paymentMethod}</p>
                     <p><strong>Tình trạng:</strong> <span class="badge badge-${invoice.status}">${invoice.status}</span></p>
-                    <p><strong>Đã thanh toán:</strong> <fmt:formatNumber value="${invoice.paidAmount}" type="number" groupingUsed="true"/> đ</p>
+                    <p><strong>Số tiền:</strong> <fmt:formatNumber value="${invoice.total}" type="number" groupingUsed="true"/> đ</p>
                 </div>
 
                 <div class="invoice-footer">

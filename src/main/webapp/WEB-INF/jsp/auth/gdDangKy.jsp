@@ -377,14 +377,6 @@
                            placeholder="VD: 0123456789">
                 </div>
 
-                <!-- Địa chỉ -->
-                <div class="form-group">
-                    <label for="address">📍 Địa chỉ</label>
-                    <input type="text" id="address" name="address" 
-                           value="<%= request.getAttribute("address") != null ? request.getAttribute("address") : "" %>"
-                           placeholder="Nhập địa chỉ">
-                </div>
-
                 <!-- Giới tính & Ngày sinh -->
                 <div class="form-row">
                     <div class="form-group">

@@ -7,7 +7,9 @@ import java.math.BigDecimal;
  * View Model for customer revenue report row
  */
 public class CustomerRevenueRow {
-    private int customerId;
+    private String customerKey;
+    private Integer accountId;
+    private boolean guest;
     private String fullName;
     private String phone;
     private String email;
@@ -18,10 +20,13 @@ public class CustomerRevenueRow {
 
     public CustomerRevenueRow() {}
 
-    public CustomerRevenueRow(int customerId, String fullName, String phone, String email,
+    public CustomerRevenueRow(String customerKey, Integer accountId, boolean guest,
+                              String fullName, String phone, String email,
                               MembershipTier tier, int orderCount, int invoiceCount,
                               BigDecimal totalRevenue) {
-        this.customerId = customerId;
+        this.customerKey = customerKey;
+        this.accountId = accountId;
+        this.guest = guest;
         this.fullName = fullName;
         this.phone = phone;
         this.email = email;
@@ -32,8 +37,14 @@ public class CustomerRevenueRow {
     }
 
     // Getters and Setters
-    public int getCustomerId() { return customerId; }
-    public void setCustomerId(int customerId) { this.customerId = customerId; }
+    public String getCustomerKey() { return customerKey; }
+    public void setCustomerKey(String customerKey) { this.customerKey = customerKey; }
+
+    public Integer getAccountId() { return accountId; }
+    public void setAccountId(Integer accountId) { this.accountId = accountId; }
+
+    public boolean isGuest() { return guest; }
+    public void setGuest(boolean guest) { this.guest = guest; }
 
     public String getFullName() { return fullName; }
     public void setFullName(String fullName) { this.fullName = fullName; }
